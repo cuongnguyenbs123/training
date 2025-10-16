@@ -11,4 +11,12 @@ export async function GET(request: Request) {
   });
 }
 
-export async function POST(request: Request) {}
+export async function POST(request: Request) {
+  const { name } = await request.json();
+  const newTask = { id: tasks.length + 1, name };
+  tasks.push(newTask);
+  return new Response(JSON.stringify(newTask), {
+    status: 201,
+    headers: { "Content-Type": "application/json" },
+  });
+}
