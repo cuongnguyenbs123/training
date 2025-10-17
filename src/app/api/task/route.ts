@@ -42,6 +42,48 @@ export async function OPTIONS(request: Request) {
   });
 }
 
+export async function PUT(request: Request) {
+  const { id, name } = await request.json();
+
+  if (!id || !name) {
+    return new Response(JSON.stringify({ message: "Task ID and name are required" }), {
+      status: 400,
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type, Authorization",
+      },
+    });
+  }
+
+  const taskIndex = tasks.findIndex((task) => task.id === parseInt(id));
+
+  if (taskIndex === -1) {
+    return new Response(JSON.stringify({ message: "Task not found" }), {
+      status: 404,
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type, Authorization",
+      },
+    });
+  }
+
+  tasks[taskIndex].name = name;
+
+  return new Response(JSON.stringify(tasks[taskIndex]), {
+    status: 200,
+    headers: {
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type, Authorization",
+    },
+  });
+}
+
 export async function DELETE(request: Request) {
   const { searchParams } = new URL(request.url);
   const id = searchParams.get("id");
