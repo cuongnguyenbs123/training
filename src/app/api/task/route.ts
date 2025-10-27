@@ -1,6 +1,8 @@
+import { randomUUID } from "crypto";
+
 let tasks = [
-  { id: 1, name: "Task1" },
-  { id: 2, name: "Task2" },
+  { id: '1', name: "Task1" },
+  { id: '2', name: "Task2" },
 ];
 export async function GET(request: Request) {
   // For example, fetch data from your DB here
@@ -18,7 +20,7 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   const { name } = await request.json();
-  const newTask = { id: tasks.length + 1, name };
+  const newTask = { id: randomUUID(), name };
   tasks.push(newTask);
   return new Response(JSON.stringify(newTask), {
     status: 201,
@@ -57,7 +59,7 @@ export async function PUT(request: Request) {
     });
   }
 
-  const taskIndex = tasks.findIndex((task) => task.id === parseInt(id));
+  const taskIndex = tasks.findIndex((task) => task.id === id);
 
   if (taskIndex === -1) {
     return new Response(JSON.stringify({ message: "Task not found" }), {
@@ -100,7 +102,7 @@ export async function DELETE(request: Request) {
   }
 
   const initialLength = tasks.length;
-  tasks = tasks.filter((task) => task.id !== parseInt(id));
+  tasks = tasks.filter((task) => task.id !== id);
 
   if (tasks.length === initialLength) {
     return new Response(JSON.stringify({ message: "Task not found" }), {
